@@ -90,7 +90,7 @@ function solve (text, mode) {
 				indx = abc_es.indexOf(c)
 			}
 
-			if (indx != -1) {
+			if (indx !== -1) {
 				sum += indx + 1
 			}
 		}
@@ -116,7 +116,7 @@ function deconstruct (sum, s = `${sum}`) {
 	let num = 0
 	let split = sum.toString().split(``)
 
-	for (n of split) {
+	for (let n of split) {
 		num += parseInt(n)
 	}
 
