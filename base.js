@@ -130,19 +130,19 @@ function deconstruct (sum, s = `${sum}`) {
 }
 
 function replace_bin (s) {
-	return s.replace(/\d+/g, function (match) {
+	return s.replace(/\d+/g, (match) => {
 		return parseInt(match).toString(2)
 	})
 }
 
 function replace_oct (s) {
-	return s.replace(/\d+/g, function (match) {
+	return s.replace(/\d+/g, (match) => {
 		return parseInt(match).toString(8)
 	})
 }
 
 function replace_hex (s) {
-	return s.replace(/\d+/g, function (match) {
+	return s.replace(/\d+/g, (match) => {
 		return parseInt(match).toString(16)
 	})
 }
