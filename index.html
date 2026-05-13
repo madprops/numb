@@ -1,78 +1,86 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>stuart little reference</title>
-		<meta charset="UTF-8">
-		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-		<script src="base.js"></script>
+  <head>
+    <title>stuart little reference</title>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <script src="base.js"></script>
 
-		<style>
-			body,
-			html {
-				background-color: #2D2D2D;
-				color: #CCCCCC;
-				font-size: 1.2em;
-				font-family: sans-serif;
-			}
+    <style>
+      body,
+      html {
+        background-color: #2D2D2D;
+        color: #CCCCCC;
+        font-size: 1.2em;
+        font-family: sans-serif;
+      }
 
-			input {
-				font-size: 1em;
-				width: 10rem;
-			}
+      input {
+        font-size: 1em;
+        width: 10rem;
+      }
 
-			button {
-				font-size: 1em;
-				cursor: pointer;
-			}
+      button,
+      select {
+        font-size: 1em;
+        cursor: pointer;
+      }
 
-			#top {
-				display: flex;
-				flex-direction: row;
-				gap: 1rem;
-			}
+      #top {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+      }
 
-			#main {
-				display: flex;
-				flex-direction: column;
-				gap: 1rem;
-				padding: 1rem;
-				align-items: flex-start;
-				margin-bottom: 3rem;
-			}
+      #main {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+        align-items: flex-start;
+        margin-bottom: 3rem;
+      }
 
-			#result {
-				display: flex;
-				flex-direction: column;
-				align-items: flex-start;
-				justify-content: center;
-				gap: 1rem;
-				margin-top: 0.5rem;
-			}
+      #result {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 0.5rem;
+      }
 
-			.cipher-grid {
-				display: flex;
-				flex-direction: column;
-				gap: 2rem;
-			}
-		</style>
+      .cipher-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+    </style>
 
-		<script>
-			window.onload = () => {
-				init()
-			}
-		</script>
-	</head>
+    <script>
+      window.onload = () => {
+        init()
+      }
+    </script>
+  </head>
 
-	<body>
-		<div id="main">
-			<div id="top">
-				<input type="text" id="numba">
-				<button id="button"><@></button>
-				<button id="mode_btn">EN</button>
-				<button id="prompt_btn">LLM</button>
-			</div>
+  <body>
+    <div id="main">
+      <div id="top">
+        <input type="text" id="numba">
+        <button id="button"><@></button>
 
-			<div id="result"></div>
-		</div>
-	</body>
+		<select id="mode_select">
+			<option value="sim">Simple</option>
+			<option value="eng">English</option>
+			<option value="he">Hebrew</option>
+			<option value="es">Spanish</option>
+		</select>
+
+        <button id="prompt_btn">LLM</button>
+      </div>
+
+      <div id="result"></div>
+    </div>
+  </body>
 </html>
