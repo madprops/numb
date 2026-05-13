@@ -164,7 +164,6 @@ function solve (text, mode, lang) {
   strings[1] = reduce_in_base(sum, 2)
   strings[2] = reduce_in_base(sum, 16)
   strings[3] = reduce_in_base(sum, 8)
-
   return strings
 }
 
