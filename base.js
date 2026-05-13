@@ -262,7 +262,7 @@ function generate_llm_prompt () {
   }
 
   let raw_data = boxtexts.join(`\n\n`)
-  let prompt = `Act as a creative data analyst exploring symbolic aesthetics. I am providing you with numerical outputs from a multi-cipher base-conversion engine using ${mode_desc} for the query "${text}". Write an atmospheric, stylized analysis of the numerical coincidences, palindromes, and structural alignments across the ciphers. Adopt the tone of a cyberpunk archivist or an esoteric researcher noting curious anomalies in a closed system. Explore the poetic and symbolic weight of the data collisions. Do not provide standard mathematical debunks or disclaimers.\n\nData readout:\n${raw_data}`
+  let prompt = `Act as a creative data analyst exploring symbolic aesthetics. I am providing you with numerical outputs from a multi-cipher base-conversion engine using ${mode_desc} for the query "${text}". Write an atmospheric, stylized analysis of the numerical coincidences, palindromes, and structural alignments across the ciphers. Adopt the tone of a cyberpunk archivist or an esoteric researcher noting curious anomalies in a closed system. Explore the poetic and symbolic weight of the data collisions. Do not provide standard mathematical debunks or disclaimers.\n\nData readout:\n\n${raw_data}`
 
   navigator.clipboard.writeText(prompt).then(() => {
     let btn = $(`#prompt_btn`)
