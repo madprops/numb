@@ -18,7 +18,7 @@ let abc_rev = `zyxwvutsrqponmlkjihgfedcba`
 let abc_es = `abcdefghijklmn\u00f1opqrstuvwxyz`
 let abc_es_rev = `zyxwvutsrqpo\u00f1nmlkjihgfedcba`
 
-let current_lang = `sim`
+let current_lang = localStorage.getItem(`current_lang`) || `sim`
 
 function init () {
   $(`#numba`).focus()
@@ -34,6 +34,7 @@ function init () {
 
   $ev($(`#mode_select`), `change`, (e) => {
     current_lang = e.target.value
+    localStorage.setItem(`current_lang`, current_lang)
 
     if ($(`#numba`).value.trim() !== ``) {
       numb()
