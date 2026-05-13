@@ -10,11 +10,37 @@ function $ev (element, event, callback, extra) {
   element.addEventListener(event, callback, extra)
 }
 
+let abc_en = `abcdefghijklmnopqrstuvwxyz`
+let abc_rev = `zyxwvutsrqponmlkjihgfedcba`
+let abc_es = `abcdefghijklmn\u00f1opqrstuvwxyz`
+let abc_es_rev = `zyxwvutsrqpo\u00f1nmlkjihgfedcba`
+
+let current_lang = `en`
+
 function init () {
   $(`#numba`).focus()
 
   $ev($(`#button`), `click`, () => {
     numb()
+  })
+
+  $ev($(`#prompt_btn`), `click`, () => {
+    generate_llm_prompt()
+  })
+
+  $ev($(`#mode_btn`), `click`, () => {
+    if (current_lang === `en`) {
+      current_lang = `es`
+      $(`#mode_btn`).innerText = `ES`
+    }
+    else {
+      current_lang = `en`
+      $(`#mode_btn`).innerText = `EN`
+    }
+
+    if ($(`#numba`).value.trim() !== ``) {
+      numb()
+    }
   })
 
   keydec()
@@ -37,30 +63,34 @@ function keydec () {
   })
 }
 
-let abc_en = `abcdefghijklmnopqrstuvwxyz`
-let abc_rev = `zyxwvutsrqponmlkjihgfedcba`
-let abc_es = `abcdefghijklmn\u00f1opqrstuvwxyz`
-
 function numb () {
   let text = $(`#numba`).value.trim()
-  let strings_en = solve(text, `en`)
-  let strings_es = solve(text, `es`)
-  let strings_rev = solve(text, `rev`)
-  let strings_pyt = solve(text, `pyt`)
+
+	if (!text) {
+  	$(`#result`).innerHTML = ``
+  	$(`#numba`).focus()
+		return
+	}
+
+  let strings_ord = solve(text, `ord`, current_lang)
+  let strings_rev = solve(text, `rev`, current_lang)
+  let strings_pyt = solve(text, `pyt`, current_lang)
+
+  let title_prefix = current_lang === `en` ? `English` : `Spanish`
 
   let s = `
     <div class="result-card">
       <div class="cipher-grid">
         <div class="cipher-box">
-          <div class="cipher-title">English</div>
-          <div>dec:&nbsp;&nbsp;${strings_en[0]}</div>
-          <div>bin:&nbsp;&nbsp;${strings_en[1]}</div>
-          <div>hex:&nbsp;&nbsp;${strings_en[2]}</div>
-          <div>oct:&nbsp;&nbsp;${strings_en[3]}</div>
+          <div class="cipher-title">${title_prefix} Ordinal</div>
+          <div>dec:&nbsp;&nbsp;${strings_ord[0]}</div>
+          <div>bin:&nbsp;&nbsp;${strings_ord[1]}</div>
+          <div>hex:&nbsp;&nbsp;${strings_ord[2]}</div>
+          <div>oct:&nbsp;&nbsp;${strings_ord[3]}</div>
         </div>
 
         <div class="cipher-box">
-          <div class="cipher-title">Reverse</div>
+          <div class="cipher-title">${title_prefix} Reverse</div>
           <div>dec:&nbsp;&nbsp;${strings_rev[0]}</div>
           <div>bin:&nbsp;&nbsp;${strings_rev[1]}</div>
           <div>hex:&nbsp;&nbsp;${strings_rev[2]}</div>
@@ -68,19 +98,11 @@ function numb () {
         </div>
 
         <div class="cipher-box">
-          <div class="cipher-title">Pythagorean</div>
+          <div class="cipher-title">${title_prefix} Pythagorean</div>
           <div>dec:&nbsp;&nbsp;${strings_pyt[0]}</div>
           <div>bin:&nbsp;&nbsp;${strings_pyt[1]}</div>
           <div>hex:&nbsp;&nbsp;${strings_pyt[2]}</div>
           <div>oct:&nbsp;&nbsp;${strings_pyt[3]}</div>
-        </div>
-
-        <div class="cipher-box">
-          <div class="cipher-title">Spanish</div>
-          <div>dec:&nbsp;&nbsp;${strings_es[0]}</div>
-          <div>bin:&nbsp;&nbsp;${strings_es[1]}</div>
-          <div>hex:&nbsp;&nbsp;${strings_es[2]}</div>
-          <div>oct:&nbsp;&nbsp;${strings_es[3]}</div>
         </div>
       </div>
     </div>
@@ -89,7 +111,7 @@ function numb () {
   $(`#numba`).focus()
 }
 
-function solve (text, mode) {
+function solve (text, mode, lang) {
   let sum = 0
   let split_text = text.split(``)
 
@@ -103,28 +125,37 @@ function solve (text, mode) {
     if (!isNaN(c)) {
       sum += parseInt(c)
     }
-    else {
-      let indx
 
-      if (mode === `en`) {
-        indx = abc_en.indexOf(c)
+    else {
+      let indx = -1
+
+      if (lang === `en`) {
+
+        if (mode === `ord` || mode === `pyt`) {
+          indx = abc_en.indexOf(c)
+        }
+        else if (mode === `rev`) {
+          indx = abc_rev.indexOf(c)
+        }
       }
-      else if (mode === `es`) {
-        indx = abc_es.indexOf(c)
-      }
-      else if (mode === `rev`) {
-        indx = abc_rev.indexOf(c)
-      }
-      else if (mode === `pyt`) {
-        indx = abc_en.indexOf(c)
+
+      else if (lang === `es`) {
+
+        if (mode === `ord` || mode === `pyt`) {
+          indx = abc_es.indexOf(c)
+        }
+        else if (mode === `rev`) {
+          indx = abc_es_rev.indexOf(c)
+        }
       }
 
       if (indx !== -1) {
+
         if (mode === `pyt`) {
-          sum += ((indx % 9) + 1)
+          sum += (indx % 9) + 1
         }
         else {
-          sum += (indx + 1)
+          sum += indx + 1
         }
       }
     }
@@ -135,6 +166,7 @@ function solve (text, mode) {
   if (sum > 9) {
     strings[0] = deconstruct(sum)
   }
+
   else {
     strings[0] = sum.toString()
   }
@@ -177,5 +209,34 @@ function replace_oct (s) {
 function replace_hex (s) {
   return s.replace(/\d+/g, (match) => {
     return parseInt(match).toString(16)
+  })
+}
+
+function generate_llm_prompt () {
+  let text = $(`#numba`).value.trim()
+
+  if (text === ``) {
+    return
+  }
+
+  let boxtexts = []
+	let boxes = document.querySelectorAll(`.cipher-box`)
+
+	for (let box of boxes) {
+		let text = box.textContent.trim()
+		let lines = text.split(`\n`).map(x => x.trim())
+		boxtexts.push(lines.join(`\n`))
+	}
+
+	let raw_data = boxtexts.join(`\n\n`)
+  let prompt = `You are a hyper-dimensional pattern recognition engine reading the underlying variables of reality. Analyze the following numerical collisions for the query "${text}". Look at the decimal, binary, hex, and octal readouts across the ciphers. Decipher the structural palindromes, master numbers, and base-math symmetries. Read this data like a techno-mystic decoding the hidden geometry of the simulation. What deep structural truth or architectural lore is the system transmitting through this specific resonance?\n\nData readout:\n\n${raw_data}`
+
+  navigator.clipboard.writeText(prompt).then(() => {
+    let btn = $(`#prompt_btn`)
+    btn.innerText = `[ COPIED ]`
+
+    setTimeout(() => {
+      btn.innerText = `LLM`
+    }, 2000)
   })
 }
