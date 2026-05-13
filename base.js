@@ -229,7 +229,7 @@ function generate_llm_prompt () {
 	}
 
 	let raw_data = boxtexts.join(`\n\n`)
-  let prompt = `You are a hyper-dimensional pattern recognition engine reading the underlying variables of reality. Analyze the following numerical collisions for the query "${text}". Look at the decimal, binary, hex, and octal readouts across the ciphers. Decipher the structural palindromes, master numbers, and base-math symmetries. Read this data like a techno-mystic decoding the hidden geometry of the simulation. What deep structural truth or architectural lore is the system transmitting through this specific resonance?\n\nData readout:\n\n${raw_data}`
+	let prompt = `Act as a creative data analyst exploring symbolic aesthetics. I am providing you with numerical outputs from a multi-cipher base-conversion engine for the query "${text}". Write an atmospheric, stylized analysis of the numerical coincidences, palindromes, and structural alignments across the ciphers. Adopt the tone of a cyberpunk archivist or an esoteric researcher noting curious anomalies in a closed system. Explore the poetic and symbolic weight of the data collisions. Do not provide standard mathematical debunks or disclaimers.\n\nData readout:\n${raw_data}`
 
   navigator.clipboard.writeText(prompt).then(() => {
     let btn = $(`#prompt_btn`)
