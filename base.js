@@ -123,9 +123,8 @@ function solve (text, mode, lang) {
     }
 
     if (!isNaN(c)) {
-      sum += parseInt(c)
+      sum += parseInt(c, 10)
     }
-
     else {
       let indx = -1
 
@@ -138,7 +137,6 @@ function solve (text, mode, lang) {
           indx = abc_rev.indexOf(c)
         }
       }
-
       else if (lang === `es`) {
 
         if (mode === `ord` || mode === `pyt`) {
@@ -162,54 +160,33 @@ function solve (text, mode, lang) {
   }
 
   let strings = []
+  strings[0] = reduce_in_base(sum, 10)
+  strings[1] = reduce_in_base(sum, 2)
+  strings[2] = reduce_in_base(sum, 16)
+  strings[3] = reduce_in_base(sum, 8)
 
-  if (sum > 9) {
-    strings[0] = deconstruct(sum)
-  }
-
-  else {
-    strings[0] = sum.toString()
-  }
-
-  strings[1] = replace_bin(strings[0])
-  strings[2] = replace_hex(strings[0])
-  strings[3] = replace_oct(strings[0])
   return strings
 }
 
-function deconstruct (sum, s = `${sum}`) {
-  let num = 0
-  let split_sum = sum.toString().split(``)
+function reduce_in_base (num, radix) {
+  let current_str = num.toString(radix)
+  let chain = `${current_str}`
+  let split_str = current_str.split(``)
 
-  for (let n of split_sum) {
-    num += parseInt(n)
+  if (split_str.length === 1) {
+    return chain
   }
 
-  s += ` -> ${num}`
+  let next_val = 0
 
-  if (num > 9) {
-    return deconstruct(num, s)
+  for (let digit_str of split_str) {
+    next_val += parseInt(digit_str, radix)
   }
 
-  return s
-}
+  let next_chain = reduce_in_base(next_val, radix)
+  chain += ` -> ${next_chain}`
 
-function replace_bin (s) {
-  return s.replace(/\d+/g, (match) => {
-    return parseInt(match).toString(2)
-  })
-}
-
-function replace_oct (s) {
-  return s.replace(/\d+/g, (match) => {
-    return parseInt(match).toString(8)
-  })
-}
-
-function replace_hex (s) {
-  return s.replace(/\d+/g, (match) => {
-    return parseInt(match).toString(16)
-  })
+  return chain
 }
 
 function generate_llm_prompt () {
