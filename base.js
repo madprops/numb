@@ -295,33 +295,66 @@ function generate_llm_prompt () {
   }
 
   let mode_desc = ``
+  let title_1 = ``
+  let title_2 = ``
+  let title_3 = ``
+  let title_4 = ``
 
   if (current_lang === `sim`) {
     mode_desc = `Simple English Gematria (A=1 to Z=26)`
+    title_1 = `Simple Gematria`
+    title_2 = `Simple Reverse`
+    title_3 = `Simple Pythagorean`
   }
 
   else if (current_lang === `eng`) {
     mode_desc = `English Gematria (Sumerian x6 multiplier)`
+    title_1 = `English Gematria`
+    title_2 = `English Reverse`
+    title_3 = `English Pythagorean`
   }
 
   else if (current_lang === `es`) {
     mode_desc = `Spanish Gematria`
+    title_1 = `Spanish Ordinal`
+    title_2 = `Spanish Reverse`
+    title_3 = `Spanish Pythagorean`
   }
 
   else if (current_lang === `he`) {
     mode_desc = `Hebrew/Jewish Gematria`
+    title_1 = `Jewish Standard`
+    title_2 = `Jewish Ordinal`
+    title_3 = `Jewish Reduced`
+    title_4 = `Jewish Atbash`
   }
 
-  let boxtexts = []
-  let boxes = document.querySelectorAll(`.cipher-box`)
+  let strings_ord = solve(text, `ord`, current_lang)
+  let strings_rev = solve(text, `rev`, current_lang)
+  let strings_pyt = solve(text, `pyt`, current_lang)
+  let strings_atb = solve(text, `atb`, current_lang)
 
-  for (let box of boxes) {
-    let box_text = box.textContent.trim()
-    let lines = box_text.split(`\n`).map(x => x.trim())
-    boxtexts.push(lines.join(`\n`))
+  let box_texts = []
+
+  let append_data = function (title, data) {
+    if (data[0] !== `0`) {
+      box_texts.push(`${title}\ndec:  ${data[0]}\nbin:  ${data[1]}\nhex:  ${data[2]}\noct:  ${data[3]}`)
+    }
   }
 
-  let raw_data = boxtexts.join(`\n\n`)
+  append_data(title_1, strings_ord)
+  append_data(title_2, strings_rev)
+  append_data(title_3, strings_pyt)
+
+  if (current_lang === `he`) {
+    append_data(title_4, strings_atb)
+  }
+
+  if (!box_texts.length) {
+    return
+  }
+
+  let raw_data = box_texts.join(`\n\n`)
   let prompt = `Analyze the following gematria and numerological data calculated using ${mode_desc} for the query "${text}". Focus on uncovering symbolic patterns, cultural references, and numerological interpretations across the different ciphers and base conversions. Explore the thematic or esoteric weight of the numbers, highlighting any synchronicities or deeper conceptual associations. Do not focus on the strict mathematics or provide standard debunks; instead, offer a rich, interpretive reading of the symbols and alignments present in the data.\n\nData readout:\n\n${raw_data}`
 
   navigator.clipboard.writeText(prompt).then(() => {
