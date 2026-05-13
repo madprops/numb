@@ -1,5 +1,6 @@
 let jewish_std = {a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, i: 9, k: 10, l: 20, m: 30, n: 40, o: 50, p: 60, q: 70, r: 80, s: 90, t: 100, u: 200, x: 300, y: 400, z: 500, j: 600, v: 700, w: 900, "א": 1, "ב": 2, "ג": 3, "ד": 4, "ה": 5, "ו": 6, "ז": 7, "ח": 8, "ט": 9, "י": 10, "כ": 20, "ך": 20, "ל": 30, "מ": 40, "ם": 40, "נ": 50, "ן": 50, "ס": 60, "ע": 70, "פ": 80, "ף": 80, "צ": 90, "ץ": 90, "ק": 100, "ר": 200, "ש": 300, "ת": 400}
 let he_ord_dict = {"א": 1, "ב": 2, "ג": 3, "ד": 4, "ה": 5, "ו": 6, "ז": 7, "ח": 8, "ט": 9, "י": 10, "כ": 11, "ך": 11, "ל": 12, "מ": 13, "ם": 13, "נ": 14, "ן": 14, "ס": 15, "ע": 16, "פ": 17, "ף": 17, "צ": 18, "ץ": 18, "ק": 19, "ר": 20, "ש": 21, "ת": 22}
+let he_atbash_dict = {"א": 400, "ב": 300, "ג": 200, "ד": 100, "ה": 90, "ו": 80, "ז": 70, "ח": 60, "ט": 50, "י": 40, "כ": 30, "ך": 30, "ל": 20, "מ": 10, "ם": 10, "נ": 9, "ן": 9, "ס": 8, "ע": 7, "פ": 6, "ף": 6, "צ": 5, "ץ": 5, "ק": 4, "ר": 3, "ש": 2, "ת": 1}
 
 function $ (query, root = document) {
   return root.querySelector(query)
@@ -75,26 +76,49 @@ function numb () {
   let strings_ord = solve(text, `ord`, current_lang)
   let strings_rev = solve(text, `rev`, current_lang)
   let strings_pyt = solve(text, `pyt`, current_lang)
+  let strings_atb = solve(text, `atb`, current_lang)
   let title_1 = ``
   let title_2 = ``
   let title_3 = ``
+  let title_4 = ``
 
   if (current_lang === `sim`) {
     title_1 = `Simple Gematria`
     title_2 = `Simple Reverse`
     title_3 = `Simple Pythagorean`
-  } else if (current_lang === `eng`) {
+  }
+
+  else if (current_lang === `eng`) {
     title_1 = `English Gematria`
     title_2 = `English Reverse`
     title_3 = `English Pythagorean`
-  } else if (current_lang === `es`) {
+  }
+
+  else if (current_lang === `es`) {
     title_1 = `Spanish Ordinal`
     title_2 = `Spanish Reverse`
     title_3 = `Spanish Pythagorean`
-  } else if (current_lang === `he`) {
+  }
+
+  else if (current_lang === `he`) {
     title_1 = `Jewish Standard`
     title_2 = `Jewish Ordinal`
     title_3 = `Jewish Reduced`
+    title_4 = `Jewish Atbash`
+  }
+
+  let atbash_html = ``
+
+  if (current_lang === `he`) {
+    atbash_html = `
+        <div class="cipher-box">
+          <div class="cipher-title">${title_4}</div>
+          <div>dec:&nbsp;&nbsp;${strings_atb[0]}</div>
+          <div>bin:&nbsp;&nbsp;${strings_atb[1]}</div>
+          <div>hex:&nbsp;&nbsp;${strings_atb[2]}</div>
+          <div>oct:&nbsp;&nbsp;${strings_atb[3]}</div>
+        </div>
+    `
   }
 
   let s = `
@@ -123,6 +147,8 @@ function numb () {
           <div>hex:&nbsp;&nbsp;${strings_pyt[2]}</div>
           <div>oct:&nbsp;&nbsp;${strings_pyt[3]}</div>
         </div>
+
+        ${atbash_html}
       </div>
     </div>
   `
@@ -143,7 +169,9 @@ function solve (text, mode, lang) {
 
     if (!isNaN(c)) {
       sum += parseInt(c, 10)
-    } else {
+    }
+
+    else {
       if (lang === `he`) {
         if (mode === `ord`) {
           let val = jewish_std[c]
@@ -151,19 +179,25 @@ function solve (text, mode, lang) {
           if (val !== undefined) {
             sum += val
           }
-        } else if (mode === `rev`) {
+        }
+
+        else if (mode === `rev`) {
           let val = he_ord_dict[c]
 
           if (val !== undefined) {
             sum += val
-          } else {
+          }
+
+          else {
             let indx = abc_en.indexOf(c)
 
             if (indx !== -1) {
               sum += indx + 1
             }
           }
-        } else if (mode === `pyt`) {
+        }
+
+        else if (mode === `pyt`) {
           let val = jewish_std[c]
 
           if (val !== undefined) {
@@ -171,19 +205,35 @@ function solve (text, mode, lang) {
             sum += reduced
           }
         }
-      } else {
+
+        else if (mode === `atb`) {
+          let val = he_atbash_dict[c]
+
+          if (val !== undefined) {
+            sum += val
+          }
+        }
+      }
+
+      else {
         let indx = -1
 
         if (lang === `sim` || lang === `eng`) {
           if (mode === `ord` || mode === `pyt`) {
             indx = abc_en.indexOf(c)
-          } else if (mode === `rev`) {
+          }
+
+          else if (mode === `rev`) {
             indx = abc_rev.indexOf(c)
           }
-        } else if (lang === `es`) {
+        }
+
+        else if (lang === `es`) {
           if (mode === `ord` || mode === `pyt`) {
             indx = abc_es.indexOf(c)
-          } else if (mode === `rev`) {
+          }
+
+          else if (mode === `rev`) {
             indx = abc_es_rev.indexOf(c)
           }
         }
@@ -191,7 +241,9 @@ function solve (text, mode, lang) {
         if (indx !== -1) {
           if (mode === `pyt`) {
             sum += (indx % 9) + 1
-          } else {
+          }
+
+          else {
             let val = indx + 1
 
             if (lang === `eng`) {
