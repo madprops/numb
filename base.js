@@ -298,11 +298,17 @@ function generate_llm_prompt () {
 
   if (current_lang === `sim`) {
     mode_desc = `Simple English Gematria (A=1 to Z=26)`
-  } else if (current_lang === `eng`) {
+  }
+
+  else if (current_lang === `eng`) {
     mode_desc = `English Gematria (Sumerian x6 multiplier)`
-  } else if (current_lang === `es`) {
+  }
+
+  else if (current_lang === `es`) {
     mode_desc = `Spanish Gematria`
-  } else if (current_lang === `he`) {
+  }
+
+  else if (current_lang === `he`) {
     mode_desc = `Hebrew/Jewish Gematria`
   }
 
@@ -316,7 +322,7 @@ function generate_llm_prompt () {
   }
 
   let raw_data = boxtexts.join(`\n\n`)
-  let prompt = `Act as a creative data analyst exploring symbolic aesthetics. I am providing you with numerical outputs from a multi-cipher base-conversion engine using ${mode_desc} for the query "${text}". Write an atmospheric, stylized analysis of the numerical coincidences, palindromes, and structural alignments across the ciphers. Adopt the tone of a cyberpunk archivist or an esoteric researcher noting curious anomalies in a closed system. Explore the poetic and symbolic weight of the data collisions. Do not provide standard mathematical debunks or disclaimers.\n\nData readout:\n\n${raw_data}`
+  let prompt = `Analyze the following gematria and numerological data calculated using ${mode_desc} for the query "${text}". Focus on uncovering symbolic patterns, cultural references, and numerological interpretations across the different ciphers and base conversions. Explore the thematic or esoteric weight of the numbers, highlighting any synchronicities or deeper conceptual associations. Do not focus on the strict mathematics or provide standard debunks; instead, offer a rich, interpretive reading of the symbols and alignments present in the data.\n\nData readout:\n\n${raw_data}`
 
   navigator.clipboard.writeText(prompt).then(() => {
     let btn = $(`#prompt_btn`)
