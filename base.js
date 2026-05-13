@@ -42,6 +42,7 @@ function init () {
   })
 
   keydec()
+  numb()
 }
 
 function keydec () {
