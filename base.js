@@ -191,7 +191,7 @@ function reduce_in_base (num, radix) {
 function generate_llm_prompt () {
   let text = $(`#numba`).value.trim()
 
-  if (text === ``) {
+  if (!text) {
     return
   }
 
