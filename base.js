@@ -107,23 +107,10 @@ function numb () {
     title_4 = `Jewish Atbash`
   }
 
-  let atbash_html = ``
+  let boxes_html = ``
 
-  if (current_lang === `he`) {
-    atbash_html = `
-        <div class="cipher-box">
-          <div class="cipher-title">${title_4}</div>
-          <div>dec:&nbsp;&nbsp;${strings_atb[0]}</div>
-          <div>bin:&nbsp;&nbsp;${strings_atb[1]}</div>
-          <div>hex:&nbsp;&nbsp;${strings_atb[2]}</div>
-          <div>oct:&nbsp;&nbsp;${strings_atb[3]}</div>
-        </div>
-    `
-  }
-
-  let s = `
-    <div class="result-card">
-      <div class="cipher-grid">
+  if (strings_ord[0] !== `0`) {
+    boxes_html += `
         <div class="cipher-box">
           <div class="cipher-title">${title_1}</div>
           <div>dec:&nbsp;&nbsp;${strings_ord[0]}</div>
@@ -131,7 +118,11 @@ function numb () {
           <div>hex:&nbsp;&nbsp;${strings_ord[2]}</div>
           <div>oct:&nbsp;&nbsp;${strings_ord[3]}</div>
         </div>
+    `
+  }
 
+  if (strings_rev[0] !== `0`) {
+    boxes_html += `
         <div class="cipher-box">
           <div class="cipher-title">${title_2}</div>
           <div>dec:&nbsp;&nbsp;${strings_rev[0]}</div>
@@ -139,7 +130,11 @@ function numb () {
           <div>hex:&nbsp;&nbsp;${strings_rev[2]}</div>
           <div>oct:&nbsp;&nbsp;${strings_rev[3]}</div>
         </div>
+    `
+  }
 
+  if (strings_pyt[0] !== `0`) {
+    boxes_html += `
         <div class="cipher-box">
           <div class="cipher-title">${title_3}</div>
           <div>dec:&nbsp;&nbsp;${strings_pyt[0]}</div>
@@ -147,11 +142,38 @@ function numb () {
           <div>hex:&nbsp;&nbsp;${strings_pyt[2]}</div>
           <div>oct:&nbsp;&nbsp;${strings_pyt[3]}</div>
         </div>
+    `
+  }
 
-        ${atbash_html}
+  if (current_lang === `he`) {
+    if (strings_atb[0] !== `0`) {
+      boxes_html += `
+          <div class="cipher-box">
+            <div class="cipher-title">${title_4}</div>
+            <div>dec:&nbsp;&nbsp;${strings_atb[0]}</div>
+            <div>bin:&nbsp;&nbsp;${strings_atb[1]}</div>
+            <div>hex:&nbsp;&nbsp;${strings_atb[2]}</div>
+            <div>oct:&nbsp;&nbsp;${strings_atb[3]}</div>
+          </div>
+      `
+    }
+  }
+
+  if (boxes_html === ``) {
+    $(`#result`).innerHTML = ``
+    $(`#numba`).focus()
+
+    return
+  }
+
+  let s = `
+    <div class="result-card">
+      <div class="cipher-grid">
+        ${boxes_html}
       </div>
     </div>
   `
+
   $(`#result`).innerHTML = s
   $(`#numba`).focus()
 }
